@@ -76,7 +76,7 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
 
 <div class="sidebar" id="sidebar">
     <div class="text-white text-center py-4">
-        <h4 class="fw-bold">POS SYSTEM</h4>
+        <h4 class="fw-bold">Aplikasi Penjualan</h4>
         <small>v1.0 (Legacy Mode)</small>
         <hr class="mx-3">
     </div>
