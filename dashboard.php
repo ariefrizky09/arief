@@ -10,13 +10,16 @@ if (!isset($_SESSION['username'])) {
 
 $username = $_SESSION['username'];
 
-// Query Transaksi Hari Ini (Versi PHP 5 menggunakan isset() sebagai pengganti ??)
+// Query Transaksi Hari Ini
 $today = date('Y-m-d');
 $query_transaksi = mysqli_query($conn, "SELECT COUNT(*) as total FROM transaksi WHERE DATE(tanggal_transaksi) = '$today'");
-$data_transaksi = mysqli_fetch_assoc($query_transaksi);
 
-// Perbaikan untuk PHP 5: Menggunakan ternary operator biasa
-$total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] : 0;
+if ($query_transaksi) {
+    $data_transaksi = mysqli_fetch_assoc($query_transaksi);
+    $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] : 0;
+} else {
+    $total_hari_ini = 0;
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,69 +27,13 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Penjualan | PHP 5 Version</title>
+    <title>Dashboard | Aplikasi Penjualan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        :root { --primary-color: #4e73df; --sidebar-width: 250px; }
-        body { background-color: #f8f9fc; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            background: var(--primary-color);
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-        .sidebar a {
-            color: rgba(255,255,255,0.8);
-            padding: 15px 25px;
-            display: block;
-            text-decoration: none;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-        }
-        
-        .content {
-            margin-left: var(--sidebar-width);
-            padding: 20px;
-            min-height: 100vh;
-            transition: all 0.3s;
-        }
-
-        /* Responsive Mobile */
-        @media (max-width: 768px) {
-            .sidebar { margin-left: -250px; }
-            .sidebar.show { margin-left: 0; }
-            .content { margin-left: 0; }
-        }
-
-        .card-custom {
-            border: none;
-            border-left: 5px solid var(--primary-color);
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-    </style>
 </head>
 <body>
 
-<div class="sidebar" id="sidebar">
-    <div class="text-white text-center py-4">
-        <h4 class="fw-bold">Aplikasi Penjualan</h4>
-        <small>v1.0 (Legacy Mode)</small>
-        <hr class="mx-3">
-    </div>
-    <a href="dashboard.php" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
-    <a href="data_barang.php"><i class="bi bi-box-seam me-2"></i> Data Barang</a>
-    <a href="data_pengguna.php"><i class="bi bi-people me-2"></i> Data Pengguna</a>
-    <a href="transaksi.php"><i class="bi bi-cart-check me-2"></i> Transaksi</a>
-    <hr class="mx-3 text-white">
-    <a href="logout.php" class="text-warning"><i class="bi bi-box-arrow-left me-2"></i> Logout</a>
-</div>
+<?php include 'sidebar.php'; ?>
 
 <div class="content" id="content">
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 shadow-sm rounded p-3">
@@ -108,7 +55,7 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card card-custom p-3 bg-white">
+                <div class="card p-3 bg-white border-0 border-start border-primary border-5 shadow-sm">
                     <div class="row align-items-center">
                         <div class="col">
                             <p class="text-uppercase text-primary fw-bold small mb-1">Transaksi Hari Ini</p>
@@ -122,7 +69,7 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
             </div>
 
             <div class="col-md-4">
-                <div class="card card-custom p-3 bg-white" style="border-left-color: #1cc88a;">
+                <div class="card p-3 bg-white border-0 border-start border-success border-5 shadow-sm">
                     <div class="row align-items-center">
                         <div class="col">
                             <p class="text-uppercase text-success fw-bold small mb-1">Total Produk</p>
@@ -136,7 +83,7 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
             </div>
             
             <div class="col-md-4">
-                <div class="card card-custom p-3 bg-white" style="border-left-color: #f6c23e;">
+                <div class="card p-3 bg-white border-0 border-start border-warning border-5 shadow-sm">
                     <div class="row align-items-center">
                         <div class="col">
                             <p class="text-uppercase text-warning fw-bold small mb-1">Stok Hampir Habis</p>
@@ -151,7 +98,7 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
         </div>
 
         <div class="card mt-5 shadow-sm border-0">
-            <div class="card-header bg-white py-3">
+            <div class="card-header bg-white py-3 border-0">
                 <h6 class="m-0 fw-bold text-primary">Riwayat Transaksi Terbaru</h6>
             </div>
             <div class="card-body">
@@ -172,7 +119,7 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
                                 <td>TRX-2026-001</td>
                                 <td><?php echo date('H:i'); ?></td>
                                 <td>Rp 150.000</td>
-                                <td><span class="badge bg-success">Selesai</span></td>
+                                <td><span class="badge bg-success text-white">Selesai</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -182,11 +129,6 @@ $total_hari_ini = (isset($data_transaksi['total'])) ? $data_transaksi['total'] :
     </div>
 </div>
 
-<script>
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('show');
-    }
-</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
