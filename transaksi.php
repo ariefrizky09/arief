@@ -9,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 
 // PROSES SIMPAN TRANSAKSI
 if (isset($_POST['simpan_transaksi'])) {
-    $id_user = $_SESSION['username'];
+    $id_user = $_SESSION['id_user'];
     $kode_barang = $_POST['kode_barang'];
     $jumlah = $_POST['jumlah'];
     
